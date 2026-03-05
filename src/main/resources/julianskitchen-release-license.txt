@@ -1,0 +1,10 @@
+Redistribution License for Compiled Mod
+
+The compiled .jar file of this mod may be freely redistributed, included in modpacks, and shared without attribution and without including this license file, provided that:
+
+1. The .jar file is distributed UNMODIFIED.
+2. The original author and project name are not misrepresented.
+
+Modification, reverse-engineering for redistribution, or distributing altered versions of this .jar file is NOT permitted.
+
+By redistributing this .jar file, you agree to comply with these terms.
