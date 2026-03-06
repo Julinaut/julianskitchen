@@ -9,7 +9,9 @@
 	],
 	"contact": {
 		"email": "contact@juhewe.de",
-		"sources": "https://github.com/Julinaut/julianskitchen"
+		"sources": "https://github.com/Julinaut/julianskitchen",
+		"issues": "https://github.com/Julinaut/julianskitchen/issues",
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/julianskitchen"
 	},
 	"license": "MIT License",
 	"icon": "assets/julianskitchen/icon.png",
