@@ -272,6 +272,9 @@ public class ModPotions {
     public static final RegistryEntry<Potion> LUCK_POTION_BC = registerPotion("luck_potion_bc",
             new StatusEffectInstance(StatusEffects.LUCK, 20*60*4, 2)
     );
+    public static final RegistryEntry<Potion> LUCK_POTION_CA = registerPotion("luck_potion_ca",
+            new StatusEffectInstance(StatusEffects.LUCK, 20*60*5, 0)
+    );
     public static final RegistryEntry<Potion> LUCK_POTION_CB = registerPotion("luck_potion_cb",
             new StatusEffectInstance(StatusEffects.LUCK, 20*60*5, 1)
     );

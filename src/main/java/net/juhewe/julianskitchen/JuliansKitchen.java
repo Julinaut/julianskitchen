@@ -3,7 +3,6 @@ package net.juhewe.julianskitchen;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
-import net.fabricmc.fabric.impl.resource.client.PackTooltipComponent;
 import net.juhewe.julianskitchen.effect.ModEffects;
 import net.juhewe.julianskitchen.potion.ModPotions;
 import net.minecraft.item.Item;
@@ -164,16 +163,15 @@ public class JuliansKitchen implements ModInitializer {
 		registerPotionRecipe(ModPotions.LUCK_POTION_AA, Items.REDSTONE, ModPotions.LUCK_POTION_BA);
 		registerPotionRecipe(ModPotions.LUCK_POTION_AB, Items.REDSTONE, ModPotions.LUCK_POTION_BB);
 		registerPotionRecipe(ModPotions.LUCK_POTION_AC, Items.REDSTONE, ModPotions.LUCK_POTION_BC);
-		registerPotionRecipe(ModPotions.LUCK_POTION_BA, Items.REDSTONE, Potions.LUCK);
+		registerPotionRecipe(ModPotions.LUCK_POTION_BA, Items.REDSTONE, ModPotions.LUCK_POTION_CA);
 		registerPotionRecipe(ModPotions.LUCK_POTION_BB, Items.REDSTONE, ModPotions.LUCK_POTION_CB);
 		registerPotionRecipe(ModPotions.LUCK_POTION_BC, Items.REDSTONE, ModPotions.LUCK_POTION_CC);
 		registerPotionRecipe(ModPotions.LUCK_POTION_AA, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_AB);
 		registerPotionRecipe(ModPotions.LUCK_POTION_BA, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_BB);
-		registerPotionRecipe(Potions.LUCK, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_CB);
+		registerPotionRecipe(ModPotions.LUCK_POTION_CA, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_CB);
 		registerPotionRecipe(ModPotions.LUCK_POTION_AB, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_AC);
 		registerPotionRecipe(ModPotions.LUCK_POTION_BB, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_BC);
 		registerPotionRecipe(ModPotions.LUCK_POTION_CB, Items.GLOWSTONE_DUST, ModPotions.LUCK_POTION_CC);
-
 
 		// VANILLA EXTENSIONS
 
