@@ -61,7 +61,7 @@ This mod requires the Fabric Loader as well as the Fabric API mod to function.
 1. Download and install Fabric Loader into your launcher. You can get it here: https://fabricmc.net/
 2. Set your installation inside the Minecraft Launcher to launch the installed Fabric Loader version. 
 3. Get the **Fabric API Mod .jar** for your Minecraft version from here: https://www.curseforge.com/minecraft/mc-mods/fabric-api/files/all
-4. Get the **Julian’s Kitchen Mod .jar** for your Minecraft version from here: https://github.com/Julinaut/julianskitchen/releases
+4. Get the **Julian’s Kitchen Mod .jar** for your Minecraft version from here: https://www.curseforge.com/minecraft/mc-mods/julianskitchen/files/all
 5. Place **both downloaded .jar files** (Fabric API & Julian's Kitchen) inside %appdata%/.minecraft/mods/
 6. Get Cooking. We must cook Jesse!
 
