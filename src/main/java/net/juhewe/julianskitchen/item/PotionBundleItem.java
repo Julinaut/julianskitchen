@@ -161,7 +161,7 @@ public class PotionBundleItem extends Item {
 
     public int getItemBarStep(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return Math.min(1 + MathHelper.multiplyFraction(bundleContentsComponent.getOccupancy().multiplyBy(Fraction.getFraction(1, potionBundleCapacity)), 12), 13);
+        return Math.max(Math.min(MathHelper.multiplyFraction(bundleContentsComponent.getOccupancy().multiplyBy(Fraction.getFraction(1, potionBundleCapacity)), 13), 13), 0);
     }
 
     public int getItemBarColor(ItemStack stack) {
