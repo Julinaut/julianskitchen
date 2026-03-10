@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type" : "minecraft:model",
+    "model": "julianskitchen:item/potion_bundle"
+  }
+}
