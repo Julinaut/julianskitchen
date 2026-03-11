@@ -60,6 +60,7 @@ public class PotionBundleItem extends Item {
                             itemStack.itemMatches(Items.POTION.getRegistryEntry())
                             || itemStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
                             ||itemStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
+                                    ||itemStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
                             )
 
             ) {
@@ -107,6 +108,7 @@ public class PotionBundleItem extends Item {
                                 otherStack.itemMatches(Items.POTION.getRegistryEntry())
                                         || otherStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
                                         ||otherStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
+                                        ||otherStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
                         )
                 ) {
                     if (slot.canTakePartial(player) && builder.add(otherStack, potionBundleCapacity) > 0) {
@@ -151,17 +153,17 @@ public class PotionBundleItem extends Item {
 
     public boolean isItemBarVisible(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return bundleContentsComponent.getOccupancy().multiplyBy(Fraction.getFraction(1, potionBundleCapacity)).compareTo(Fraction.ZERO) > 0;
+        return Fraction.getFraction(bundleContentsComponent.getContentAmount(), potionBundleCapacity).compareTo(Fraction.ZERO) > 0;
     }
 
     public int getItemBarStep(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return Math.max(Math.min(MathHelper.multiplyFraction(bundleContentsComponent.getOccupancy().multiplyBy(Fraction.getFraction(1, potionBundleCapacity)), 13), 13), 0);
+        return Math.max(Math.min(MathHelper.multiplyFraction(Fraction.getFraction(bundleContentsComponent.getContentAmount(), potionBundleCapacity), 13), 13), 0);
     }
 
     public int getItemBarColor(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return bundleContentsComponent.getOccupancy().multiplyBy(Fraction.getFraction(1, potionBundleCapacity)).compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
+        return Fraction.getFraction(bundleContentsComponent.getContentAmount(), potionBundleCapacity).compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
     }
 
     private boolean dropFirstBundledStack(ItemStack stack, PlayerEntity player) {
@@ -228,19 +230,24 @@ public class PotionBundleItem extends Item {
 
 
                     PotionContentsComponent potionContent = (PotionContentsComponent)contentStack.get(DataComponentTypes.POTION_CONTENTS);
-
-                    if(potionContent != null){
+                    boolean isGlassBottle = contentStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry());
+                    if(potionContent != null || isGlassBottle){
 
                         if(contentStack.itemMatches(Items.POTION.getRegistryEntry())){
                             textConsumer.accept(Text.translatable("item.minecraft.potion").formatted(Formatting.GRAY));
+                            buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
                         }
                         else if(contentStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())){
                             textConsumer.accept(Text.translatable("item.minecraft.splash_potion").formatted(Formatting.GRAY));
+                            buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
                         }
                         else if(contentStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())){
                             textConsumer.accept(Text.translatable("item.minecraft.lingering_potion").formatted(Formatting.GRAY));
+                            buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
                         }
-                        buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
+                        else if(isGlassBottle){
+                            textConsumer.accept(Text.translatable("item.minecraft.glass_bottle").append(Text.of(" x" + contentStack.getCount())).formatted(Formatting.GRAY));
+                        }
                     }
                 }
                 else if(itemIndex == showItems)
