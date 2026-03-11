@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import com.google.common.collect.Lists;
 import net.juhewe.julianskitchen.component.ModDataComponentTypes;
 import net.juhewe.julianskitchen.component.PotionBundleContentsComponent;
+import net.juhewe.julianskitchen.sound.ModSounds;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BundleContentsComponent;
 import net.minecraft.component.type.PotionContentsComponent;
@@ -306,19 +307,19 @@ public class PotionBundleItem extends Item {
     }
 
     private static void playRemoveOneSound(Entity entity) {
-        entity.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+        entity.playSound(ModSounds.POTION_BUNDLE_REMOVE, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
     }
 
     private static void playInsertSound(Entity entity) {
-        entity.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+        entity.playSound(ModSounds.POTION_BUNDLE_INSERT, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
     }
 
     private static void playInsertFailSound(Entity entity) {
-        entity.playSound(SoundEvents.ITEM_BUNDLE_INSERT_FAIL, 1.0F, 1.0F);
+        entity.playSound(ModSounds.POTION_BUNDLE_INSERT_FAIL, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
     }
 
     private static void playDropContentsSound(World world, Entity entity) {
-        world.playSound((Entity)null, entity.getBlockPos(), SoundEvents.ITEM_BUNDLE_DROP_CONTENTS, SoundCategory.PLAYERS, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+        world.playSound((Entity)null, entity.getBlockPos(), ModSounds.POTION_BUNDLE_DROP_CONTENTS, SoundCategory.PLAYERS, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
     }
 
     private void onContentChanged(PlayerEntity user) {

@@ -7,6 +7,7 @@ import net.juhewe.julianskitchen.component.ModDataComponentTypes;
 import net.juhewe.julianskitchen.effect.ModEffects;
 import net.juhewe.julianskitchen.item.ModItems;
 import net.juhewe.julianskitchen.potion.ModPotions;
+import net.juhewe.julianskitchen.sound.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
@@ -30,6 +31,7 @@ public class JuliansKitchen implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		ModSounds.registerSounds();
 		ModEffects.registerEffects();
 		ModPotions.registerPotions();
 		ModDataComponentTypes.registerDataComponentTypes();
