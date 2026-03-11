@@ -22,14 +22,11 @@ import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.*;
@@ -97,7 +94,6 @@ public class PotionBundleItem extends Item {
 
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.LEFT && otherStack.isEmpty()) {
-            setSelectedStackIndex(stack, -1);
             return false;
         } else {
             PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
@@ -135,7 +131,6 @@ public class PotionBundleItem extends Item {
                     this.onContentChanged(player);
                     return true;
                 } else {
-                    setSelectedStackIndex(stack, -1);
                     return false;
                 }
             }
@@ -152,7 +147,6 @@ public class PotionBundleItem extends Item {
             playDropContentsSound(world, player);
             player.incrementStat(Stats.USED.getOrCreateStat(this));
         }
-
     }
 
     public boolean isItemBarVisible(ItemStack stack) {
@@ -168,14 +162,6 @@ public class PotionBundleItem extends Item {
     public int getItemBarColor(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
         return bundleContentsComponent.getOccupancy().multiplyBy(Fraction.getFraction(1, potionBundleCapacity)).compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
-    }
-
-    public static void setSelectedStackIndex(ItemStack stack, int selectedStackIndex) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
-        if (bundleContentsComponent != null) {
-            PotionBundleContentsComponent.Builder builder = new PotionBundleContentsComponent.Builder(bundleContentsComponent);
-            stack.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, builder.build());
-        }
     }
 
     private boolean dropFirstBundledStack(ItemStack stack, PlayerEntity player) {
@@ -220,14 +206,6 @@ public class PotionBundleItem extends Item {
         return 200;
     }
 
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BUNDLE;
-    }
-
-    public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        return Optional.empty();
-    }
-
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
 
@@ -262,7 +240,7 @@ public class PotionBundleItem extends Item {
                         else if(contentStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())){
                             textConsumer.accept(Text.translatable("item.minecraft.lingering_potion").formatted(Formatting.GRAY));
                         }
-                        buildPotionTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
+                        buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
                     }
                 }
                 else if(itemIndex == showItems)
@@ -272,11 +250,10 @@ public class PotionBundleItem extends Item {
                 itemIndex++;
             }
         }
-
         super.appendTooltip(stack, context, displayComponent, textConsumer, type);
     }
 
-    public static void buildPotionTooltip(Iterable<StatusEffectInstance> effects, Consumer<Text> textConsumer, float durationMultiplier, float tickRate) {
+    public static void buildPotionEffectTooltip(Iterable<StatusEffectInstance> effects, Consumer<Text> textConsumer, float durationMultiplier, float tickRate) {
         List<com.mojang.datafixers.util.Pair<RegistryEntry<EntityAttribute>, EntityAttributeModifier>> list = Lists.newArrayList();
         boolean noEffects = true;
 
@@ -327,6 +304,5 @@ public class PotionBundleItem extends Item {
         if (screenHandler != null) {
             screenHandler.onContentChanged(user.getInventory());
         }
-
     }
 }
