@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import com.google.common.collect.Lists;
+import net.juhewe.julianskitchen.ModGamerules;
 import net.juhewe.julianskitchen.component.ModDataComponentTypes;
 import net.juhewe.julianskitchen.component.PotionBundleContentsComponent;
 import net.juhewe.julianskitchen.sound.ModSounds;
@@ -38,9 +39,6 @@ import net.minecraft.text.Text;
 
 public class PotionBundleItem extends Item {
 
-    public static final int potionBundleCapacity = 6;
-    public static final int showItems = 1;
-
     private static final int FULL_ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 0.4F, 0.33F, 0.33F);
     private static final int ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 0.9F, 0.9F, 1.0F);
 
@@ -64,7 +62,7 @@ public class PotionBundleItem extends Item {
                             )
 
             ) {
-                if (builder.add(slot, player, potionBundleCapacity) > 0) {
+                if (builder.add(slot, player, ModGamerules.getPotionBundleCapacity()) > 0) {
                     playInsertSound(player);
                 } else {
                     playInsertFailSound(player);
@@ -78,7 +76,7 @@ public class PotionBundleItem extends Item {
                 if (itemStack2 != null) {
                     ItemStack itemStack3 = slot.insertStack(itemStack2);
                     if (itemStack3.getCount() > 0) {
-                        builder.add(itemStack3, potionBundleCapacity);
+                        builder.add(itemStack3, ModGamerules.getPotionBundleCapacity());
                     } else {
                         playRemoveOneSound(player);
                     }
@@ -111,7 +109,7 @@ public class PotionBundleItem extends Item {
                                         ||otherStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
                         )
                 ) {
-                    if (slot.canTakePartial(player) && builder.add(otherStack, potionBundleCapacity) > 0) {
+                    if (slot.canTakePartial(player) && builder.add(otherStack, ModGamerules.getPotionBundleCapacity()) > 0) {
                         playInsertSound(player);
                     } else {
                         playInsertFailSound(player);
@@ -153,17 +151,17 @@ public class PotionBundleItem extends Item {
 
     public boolean isItemBarVisible(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return Fraction.getFraction(bundleContentsComponent.getContentAmount(), potionBundleCapacity).compareTo(Fraction.ZERO) > 0;
+        return Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()).compareTo(Fraction.ZERO) > 0;
     }
 
     public int getItemBarStep(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return Math.max(Math.min(MathHelper.multiplyFraction(Fraction.getFraction(bundleContentsComponent.getContentAmount(), potionBundleCapacity), 13), 13), 0);
+        return Math.max(Math.min(MathHelper.multiplyFraction(Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()), 13), 13), 0);
     }
 
     public int getItemBarColor(ItemStack stack) {
         PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return Fraction.getFraction(bundleContentsComponent.getContentAmount(), potionBundleCapacity).compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
+        return Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()).compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
     }
 
     private boolean dropFirstBundledStack(ItemStack stack, PlayerEntity player) {
@@ -210,6 +208,8 @@ public class PotionBundleItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+
+        int showItems = ModGamerules.getPotionBundleVisibleCount();
 
         PotionBundleContentsComponent content = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
 

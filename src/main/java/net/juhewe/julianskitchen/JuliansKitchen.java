@@ -31,6 +31,8 @@ public class JuliansKitchen implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		ModGamerules.registerModGameRules();
+		ModServerTickListener.registerModServerTickListener();
 		ModSounds.registerSounds();
 		ModEffects.registerEffects();
 		ModPotions.registerPotions();
