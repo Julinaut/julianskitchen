@@ -179,31 +179,31 @@ public class ModPotions {
 
 
     public static final RegistryEntry<Potion> SATURATION_POTION_AA = registerPotion("saturation_potion_aa",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*2, 0)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*2, 0)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_AB = registerPotion("saturation_potion_ab",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*2, 1)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*2, 1)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_AC = registerPotion("saturation_potion_ac",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*2, 2)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*2, 2)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_BA = registerPotion("saturation_potion_ba",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*4, 0)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*4, 0)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_BB = registerPotion("saturation_potion_bb",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*4, 1)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*4, 1)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_BC = registerPotion("saturation_potion_bc",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*4, 2)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*4, 2)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_CA = registerPotion("saturation_potion_ca",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*6, 0)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*6, 0)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_CB = registerPotion("saturation_potion_cb",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*6, 1)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*6, 1)
     );
     public static final RegistryEntry<Potion> SATURATION_POTION_CC = registerPotion("saturation_potion_cc",
-            new StatusEffectInstance(StatusEffects.SATURATION, 20*60*10, 2)
+            new StatusEffectInstance(ModEffects.SATURATION, 20*60*10, 2)
     );
 
 

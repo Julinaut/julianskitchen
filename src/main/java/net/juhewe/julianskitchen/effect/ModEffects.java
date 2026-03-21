@@ -35,6 +35,11 @@ public class ModEffects {
                     new SoftLandingEffect(StatusEffectCategory.BENEFICIAL, 0xFDFDFD)
             );
 
+    public static final RegistryEntry<StatusEffect> SATURATION =
+            registerStatusEffect(
+                    "saturation",
+                    new SaturationEffect(StatusEffectCategory.BENEFICIAL, 0xF82423)
+            );
 
 
     private static RegistryEntry<StatusEffect> registerStatusEffect(String name, StatusEffect statusEffect){
