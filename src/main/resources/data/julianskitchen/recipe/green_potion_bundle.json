@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "julianskitchen:potion_bundle",
+    "minecraft:green_dye"
+  ],
+  "result": {
+    "count": 1,
+    "id": "julianskitchen:green_potion_bundle"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "minecraft:rabbit_hide",
+    "#": "minecraft:leather",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "XXX",
+    "#W#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "julianskitchen:potion_bundle"
+  }
+}

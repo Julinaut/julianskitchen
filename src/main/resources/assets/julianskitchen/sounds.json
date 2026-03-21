@@ -1,0 +1,22 @@
+{
+  "potion_bundle_drop_contents": {
+    "sounds":[
+      "julianskitchen:potion_bundle_drop_contents"
+    ]
+  },
+  "potion_bundle_insert": {
+    "sounds":[
+      "julianskitchen:potion_bundle_insert"
+    ]
+  },
+  "potion_bundle_insert_fail": {
+    "sounds":[
+      "julianskitchen:potion_bundle_insert_fail"
+    ]
+  },
+  "potion_bundle_remove": {
+    "sounds":[
+      "julianskitchen:potion_bundle_remove"
+    ]
+  }
+}

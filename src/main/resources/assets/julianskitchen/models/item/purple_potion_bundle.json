@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "julianskitchen:item/purple_potion_bundle"
+  }
+}

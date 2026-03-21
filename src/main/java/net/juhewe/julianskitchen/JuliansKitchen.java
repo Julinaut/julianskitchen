@@ -3,8 +3,11 @@ package net.juhewe.julianskitchen;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
+import net.juhewe.julianskitchen.component.ModDataComponentTypes;
 import net.juhewe.julianskitchen.effect.ModEffects;
+import net.juhewe.julianskitchen.item.ModItems;
 import net.juhewe.julianskitchen.potion.ModPotions;
+import net.juhewe.julianskitchen.sound.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
@@ -28,8 +31,13 @@ public class JuliansKitchen implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		ModGamerules.registerModGameRules();
+		ModServerTickListener.registerModServerTickListener();
+		ModSounds.registerSounds();
 		ModEffects.registerEffects();
 		ModPotions.registerPotions();
+		ModDataComponentTypes.registerDataComponentTypes();
+		ModItems.registerModItems();
 
 		registerPotionRecipe(Potions.AWKWARD, Items.POISONOUS_POTATO, ModPotions.VACCINATION_POTION_A);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_A, Items.REDSTONE, ModPotions.VACCINATION_POTION_B);
