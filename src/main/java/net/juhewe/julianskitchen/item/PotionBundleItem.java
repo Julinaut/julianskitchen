@@ -59,6 +59,7 @@ public class PotionBundleItem extends Item {
                             || itemStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
                             ||itemStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
                                     ||itemStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
+                                    ||itemStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry())
                             )
 
             ) {
@@ -107,6 +108,7 @@ public class PotionBundleItem extends Item {
                                         || otherStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
                                         ||otherStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
                                         ||otherStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
+                                        ||otherStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry())
                         )
                 ) {
                     if (slot.canTakePartial(player) && builder.add(otherStack, ModGamerules.getPotionBundleCapacity()) > 0) {
@@ -231,7 +233,8 @@ public class PotionBundleItem extends Item {
 
                     PotionContentsComponent potionContent = (PotionContentsComponent)contentStack.get(DataComponentTypes.POTION_CONTENTS);
                     boolean isGlassBottle = contentStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry());
-                    if(potionContent != null || isGlassBottle){
+                    boolean isHoneyBottle = contentStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry());
+                    if(potionContent != null || isGlassBottle || isHoneyBottle){
 
                         if(contentStack.itemMatches(Items.POTION.getRegistryEntry())){
                             textConsumer.accept(Text.translatable("item.minecraft.potion").formatted(Formatting.GRAY));
@@ -247,6 +250,9 @@ public class PotionBundleItem extends Item {
                         }
                         else if(isGlassBottle){
                             textConsumer.accept(Text.translatable("item.minecraft.glass_bottle").append(Text.of(" x" + contentStack.getCount())).formatted(Formatting.GRAY));
+                        }
+                        else if(isHoneyBottle){
+                            textConsumer.accept(Text.translatable("item.minecraft.honey_bottle").append(Text.of(" x" + contentStack.getCount())).formatted(Formatting.GRAY));
                         }
                     }
                 }

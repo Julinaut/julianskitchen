@@ -109,6 +109,7 @@ public final class PotionBundleContentsComponent implements TooltipData {
                             || itemStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
                             ||itemStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
                             ||itemStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
+                            ||itemStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry())
             );
         }
 
