@@ -2,7 +2,8 @@
 
 You think the brewing in Minecraft is cool but could use a tad more complexity? Me too!  
 
-This mod expands the potion brewing system in Minecraft by adding more upgrades to existing potions, new potions to previously inaccessible vanilla effects and four entirely new effects along with potions for these effects. All while attempting to keep a somewhat vanilla feel to it.
+This mod expands the potion brewing system in Minecraft by adding more upgrades to existing potions, new potions to previously inaccessible vanilla effects and some entirely new effects along with potions for these effects. All while attempting to keep a somewhat vanilla feel to it.
+Also: Potion Bundle!
 
 ---
 
@@ -49,7 +50,16 @@ This mod expands the potion brewing system in Minecraft by adding more upgrades 
         - Awkward Potion + Resin Clump
         - Makes the affected repair any tool slowly over time by holding it in their main hand while the effect is active.
         
-
+- Adds Potion Bundle item
+    - Works similar to the Bundle item but can only hold potions and bottles.
+    - Holds up to 6 bottles. 
+        - (Can be changed via `julianskitchen:potion_bundle_capacity` gamerule)
+        - One bottle can be a water bottle, a potion, an empty glass bottle or a honey bottle.
+    - Only displays one topmost item in tooltip. 
+        - (Can be changed via `julianskitchen:potion_bundle_visible_count` gamerule) 
+    - Can be crafted using 3 rabbit hide, 5 leather and one wool block of any color.
+        - ![recipe](media/potionBundleRecipe.png)
+        - Can be dyed any color by combining the Potion Bundle with a dye in crafting. **BE CAREFUL: Dying a Potion Bundle removes its content. This will get fixed in the future.**
 ---
 
 ## Installation & Requirements
@@ -83,5 +93,4 @@ Full size image: https://juhewe.de/jkrecipes.webp
 - Ability to combine certain ingredients into multi-effect potions.
 - Better balancing of effect times and amplifiers.
 - More enchantment effects as potion effects.
-- Potion Bundle. A special bundle that has the capacity of 6 slots but can only hold potions.
 - A potion that changes the weather
