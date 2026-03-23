@@ -39,6 +39,20 @@ public class JuliansKitchen implements ModInitializer {
 		ModDataComponentTypes.registerDataComponentTypes();
 		ModItems.registerModItems();
 
+		registerPotionRecipe(Potions.AWKWARD, Items.FIRE_CHARGE, ModPotions.FIREWALK_POTION_AA);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_AA, Items.REDSTONE, ModPotions.FIREWALK_POTION_BA);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_AB, Items.REDSTONE, ModPotions.FIREWALK_POTION_BB);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_AC, Items.REDSTONE, ModPotions.FIREWALK_POTION_BC);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_BA, Items.REDSTONE, ModPotions.FIREWALK_POTION_CA);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_BB, Items.REDSTONE, ModPotions.FIREWALK_POTION_CB);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_BC, Items.REDSTONE, ModPotions.FIREWALK_POTION_CC);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_AA, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_AB);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_BA, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_BB);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_CA, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_CB);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_AB, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_AC);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_BB, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_BC);
+		registerPotionRecipe(ModPotions.FIREWALK_POTION_CB, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_CC);
+
 		registerPotionRecipe(Potions.AWKWARD, Items.POISONOUS_POTATO, ModPotions.VACCINATION_POTION_A);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_A, Items.REDSTONE, ModPotions.VACCINATION_POTION_B);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_B, Items.REDSTONE, ModPotions.VACCINATION_POTION_C);

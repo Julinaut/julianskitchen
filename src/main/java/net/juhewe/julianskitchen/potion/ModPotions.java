@@ -13,6 +13,35 @@ import net.minecraft.util.Identifier;
 public class ModPotions {
 
     //Potions
+
+    public static final RegistryEntry<Potion> FIREWALK_POTION_AA = registerPotion("firewalk_potion_aa",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*10, 0)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_AB = registerPotion("firewalk_potion_ab",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*10, 1)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_AC = registerPotion("firewalk_potion_ac",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*10, 2)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_BA = registerPotion("firewalk_potion_ba",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 0)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_BB = registerPotion("firewalk_potion_bb",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 1)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_BC = registerPotion("firewalk_potion_bc",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 2)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_CA = registerPotion("firewalk_potion_ca",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*30, 0)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_CB = registerPotion("firewalk_potion_cb",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*30, 1)
+    );
+    public static final RegistryEntry<Potion> FIREWALK_POTION_CC = registerPotion("firewalk_potion_cc",
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*60, 2)
+    );
+
     public static final RegistryEntry<Potion> VACCINATION_POTION_A = registerPotion("vaccination_potion_a",
             new StatusEffectInstance(ModEffects.IMMUNE, 20*60*3, 0)
     );
