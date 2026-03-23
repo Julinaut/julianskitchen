@@ -27,6 +27,15 @@
   "effect.julianskitchen.saturation": "Saturation",
   "effect.julianskitchen.precipitation": "Precipitation",
 
+  "item.minecraft.potion.effect.monsoon_potion_a": "Potion of the Monsoon",
+  "item.minecraft.potion.effect.monsoon_potion_b": "Potion of the unbridled Monsoon",
+  "item.minecraft.splash_potion.effect.monsoon_potion_a": "Splash Potion of the Monsoon",
+  "item.minecraft.splash_potion.effect.monsoon_potion_b": "Splash Potion of the unbridled Monsoon",
+  "item.minecraft.lingering_potion.effect.monsoon_potion_a": "Lingering Potion of the Monsoon",
+  "item.minecraft.lingering_potion.effect.monsoon_potion_b": "Lingering Potion of the unbridled Monsoon",
+  "item.minecraft.tipped_arrow.effect.monsoon_potion_a": "Arrow of the Monsoon",
+  "item.minecraft.tipped_arrow.effect.monsoon_potion_b": "Arrow of the unbridled Monsoon",
+
   "item.minecraft.potion.effect.vaccination_potion_a": "Potion of Vaccination",
   "item.minecraft.potion.effect.vaccination_potion_b": "Potion of Sustained Vaccination",
   "item.minecraft.potion.effect.vaccination_potion_c": "Potion of Extended Vaccination",

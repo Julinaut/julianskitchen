@@ -13,6 +13,14 @@ import net.minecraft.util.Identifier;
 public class ModPotions {
 
     //Potions
+
+    public static final RegistryEntry<Potion> MONSOON_POTION_A = registerPotion("monsoon_potion_a",
+            new StatusEffectInstance(ModEffects.PRECIPITATION, 1, 0)
+    );
+    public static final RegistryEntry<Potion> MONSOON_POTION_B = registerPotion("monsoon_potion_b",
+            new StatusEffectInstance(ModEffects.PRECIPITATION, 1, 1)
+    );
+
     public static final RegistryEntry<Potion> VACCINATION_POTION_A = registerPotion("vaccination_potion_a",
             new StatusEffectInstance(ModEffects.IMMUNE, 20*60*3, 0)
     );
