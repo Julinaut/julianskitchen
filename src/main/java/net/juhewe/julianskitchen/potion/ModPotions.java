@@ -21,7 +21,8 @@ public class ModPotions {
             new StatusEffectInstance(ModEffects.FIREWALK, 20*10, 1)
     );
     public static final RegistryEntry<Potion> FIREWALK_POTION_AC = registerPotion("firewalk_potion_ac",
-            new StatusEffectInstance(ModEffects.FIREWALK, 20*10, 2)
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*10, 2),
+            new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 20*15, 0)
     );
     public static final RegistryEntry<Potion> FIREWALK_POTION_BA = registerPotion("firewalk_potion_ba",
             new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 0)
@@ -30,7 +31,8 @@ public class ModPotions {
             new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 1)
     );
     public static final RegistryEntry<Potion> FIREWALK_POTION_BC = registerPotion("firewalk_potion_bc",
-            new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 2)
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*20, 2),
+            new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 20*25, 0)
     );
     public static final RegistryEntry<Potion> FIREWALK_POTION_CA = registerPotion("firewalk_potion_ca",
             new StatusEffectInstance(ModEffects.FIREWALK, 20*30, 0)
@@ -39,7 +41,8 @@ public class ModPotions {
             new StatusEffectInstance(ModEffects.FIREWALK, 20*30, 1)
     );
     public static final RegistryEntry<Potion> FIREWALK_POTION_CC = registerPotion("firewalk_potion_cc",
-            new StatusEffectInstance(ModEffects.FIREWALK, 20*60, 2)
+            new StatusEffectInstance(ModEffects.FIREWALK, 20*60, 2),
+            new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 20*70, 0)
     );
 
     public static final RegistryEntry<Potion> VACCINATION_POTION_A = registerPotion("vaccination_potion_a",

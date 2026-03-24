@@ -47,6 +47,23 @@ public class FirewalkEffect extends StatusEffect {
         );
         enchantmentEffect.apply(world, (amplifier) + 1, null, entity, entity.getEntityPos());
 
+        if(amplifier >= 2){
+
+            EnchantmentEntityEffect enchantmentEffect2 = new ReplaceDiskEnchantmentEffect(
+                    EnchantmentLevelBasedValue.constant(2.0F),
+                    EnchantmentLevelBasedValue.constant(1.0F),
+                    offset,
+                    Optional.of(
+                            BlockPredicate.allOf(
+                                    BlockPredicate.matchingBlocks(Blocks.FIRE)
+                            )
+                    ),
+                    BlockStateProvider.of(Blocks.AIR),
+                    Optional.of(GameEvent.BLOCK_PLACE)
+            );
+            enchantmentEffect2.apply(world, 1, null, entity, entity.getEntityPos());
+
+        }
     }
 
     @Override
