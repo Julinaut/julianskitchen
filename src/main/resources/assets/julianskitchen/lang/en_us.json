@@ -28,6 +28,11 @@
   "effect.julianskitchen.precipitation": "Precipitation",
   "effect.julianskitchen.clear_sky": "Clear Sky",
 
+  "item.minecraft.potion.effect.clear_sky_potion": "Potion of Unclouding",
+  "item.minecraft.splash_potion.effect.clear_sky_potion": "Splash Potion of Unclouding",
+  "item.minecraft.lingering_potion.effect.clear_sky_potion": "Lingering Potion of Unclouding",
+  "item.minecraft.tipped_arrow.effect.clear_sky_potion": "Arrow of Unclouding",
+
   "item.minecraft.potion.effect.monsoon_potion_a": "Potion of the Monsoon",
   "item.minecraft.potion.effect.monsoon_potion_b": "Potion of the unbridled Monsoon",
   "item.minecraft.splash_potion.effect.monsoon_potion_a": "Splash Potion of the Monsoon",
