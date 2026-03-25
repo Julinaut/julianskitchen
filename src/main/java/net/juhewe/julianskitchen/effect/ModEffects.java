@@ -47,6 +47,12 @@ public class ModEffects {
                     new PrecipitationEffect(StatusEffectCategory.NEUTRAL, 0x9483BA)
             );
 
+    public static final RegistryEntry<StatusEffect> CLEAR_SKY =
+            registerStatusEffect(
+                    "clear_sky",
+                    new ClearSkyEffect(StatusEffectCategory.NEUTRAL, 0xFFED8C)
+            );
+
     private static RegistryEntry<StatusEffect> registerStatusEffect(String name, StatusEffect statusEffect){
         return Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of(JuliansKitchen.MOD_ID, name), statusEffect);
     }
