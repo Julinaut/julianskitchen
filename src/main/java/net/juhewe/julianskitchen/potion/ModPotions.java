@@ -13,6 +13,17 @@ import net.minecraft.util.Identifier;
 public class ModPotions {
 
     //Potions
+
+    public static final RegistryEntry<Potion> SANDTRAP_POTION_A = registerPotion("sandtrap_potion_a",
+            new StatusEffectInstance(ModEffects.SANDTRAP, 20+4, 0)
+    );
+    public static final RegistryEntry<Potion> SANDTRAP_POTION_B = registerPotion("sandtrap_potion_b",
+            new StatusEffectInstance(ModEffects.SANDTRAP, 20+5, 1)
+    );
+    public static final RegistryEntry<Potion> SANDTRAP_POTION_C = registerPotion("sandtrap_potion_c",
+            new StatusEffectInstance(ModEffects.SANDTRAP, 20+6, 2)
+    );
+
     public static final RegistryEntry<Potion> VACCINATION_POTION_A = registerPotion("vaccination_potion_a",
             new StatusEffectInstance(ModEffects.IMMUNE, 20*60*3, 0)
     );
