@@ -46,6 +46,12 @@ public class ModEffects {
                     "firewalk",
                     new FirewalkEffect(StatusEffectCategory.HARMFUL, 0xDEE600)
             );
+    public static final RegistryEntry<StatusEffect> SANDTRAP =
+            registerStatusEffect(
+                    "sandtrap",
+                    new SandtrapEffect(StatusEffectCategory.HARMFUL, 0xDACFA2)
+            );
+
 
     private static RegistryEntry<StatusEffect> registerStatusEffect(String name, StatusEffect statusEffect){
         return Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of(JuliansKitchen.MOD_ID, name), statusEffect);

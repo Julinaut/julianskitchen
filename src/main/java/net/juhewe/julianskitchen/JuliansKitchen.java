@@ -53,6 +53,10 @@ public class JuliansKitchen implements ModInitializer {
 		registerPotionRecipe(ModPotions.FIREWALK_POTION_BB, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_BC);
 		registerPotionRecipe(ModPotions.FIREWALK_POTION_CB, Items.GLOWSTONE_DUST, ModPotions.FIREWALK_POTION_CC);
 
+		registerPotionRecipe(Potions.AWKWARD, Items.SHORT_DRY_GRASS, ModPotions.SANDTRAP_POTION_A);
+		registerPotionRecipe(ModPotions.SANDTRAP_POTION_A, Items.GLOWSTONE_DUST, ModPotions.SANDTRAP_POTION_B);
+		registerPotionRecipe(ModPotions.SANDTRAP_POTION_B, Items.GLOWSTONE_DUST, ModPotions.SANDTRAP_POTION_C);
+
 		registerPotionRecipe(Potions.AWKWARD, Items.POISONOUS_POTATO, ModPotions.VACCINATION_POTION_A);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_A, Items.REDSTONE, ModPotions.VACCINATION_POTION_B);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_B, Items.REDSTONE, ModPotions.VACCINATION_POTION_C);
