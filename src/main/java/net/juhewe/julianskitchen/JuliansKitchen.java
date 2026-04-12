@@ -39,6 +39,10 @@ public class JuliansKitchen implements ModInitializer {
 		ModDataComponentTypes.registerDataComponentTypes();
 		ModItems.registerModItems();
 
+		registerPotionRecipe(Potions.AWKWARD, Items.FERMENTED_SPIDER_EYE, ModPotions.FERTILIZE_POTION_A);
+		registerPotionRecipe(ModPotions.FERTILIZE_POTION_A, Items.REDSTONE, ModPotions.FERTILIZE_POTION_B);
+		registerPotionRecipe(ModPotions.FERTILIZE_POTION_B, Items.REDSTONE, ModPotions.FERTILIZE_POTION_C);
+
 		registerPotionRecipe(Potions.AWKWARD, Items.POISONOUS_POTATO, ModPotions.VACCINATION_POTION_A);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_A, Items.REDSTONE, ModPotions.VACCINATION_POTION_B);
 		registerPotionRecipe(ModPotions.VACCINATION_POTION_B, Items.REDSTONE, ModPotions.VACCINATION_POTION_C);
