@@ -17,11 +17,6 @@ public class SoftLandingEffect extends StatusEffect {
         if(!entity.isOnGround()){
             entity.fallDistance = 0D;
         }
-
-        //if (entity.getVelocity().getY() > (double)-0.1F && entity.fallDistance > (double)0.1F) {
-        //    entity.fallDistance = (double)0.1F;
-        //}
-
         return true;
     }
 

@@ -6,7 +6,6 @@ import com.mojang.serialization.DataResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -141,7 +140,6 @@ public final class PotionBundleContentsComponent implements TooltipData {
                     slotStack.getCount(),                        // items available in the stack
                     Math.max(bundleCapacity - getContentAmount(), 0) // capacity left in bundle
             );
-
 
             return this.add(
                     slot.takeStackRange(slotStack.getCount(), itemsToInsert, player),

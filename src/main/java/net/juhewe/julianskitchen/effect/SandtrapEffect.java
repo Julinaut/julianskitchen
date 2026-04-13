@@ -32,8 +32,6 @@ public class SandtrapEffect extends StatusEffect {
 
     @Override
     public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-
-
         applySand(0, 1, world, entity, 100);
         applySand(0, 2, world, entity, 50);
 
@@ -46,7 +44,6 @@ public class SandtrapEffect extends StatusEffect {
             applySand(1, 3, world, entity,50 + amplifier * 10);
         }
 
-
         entity.setVelocity(0,-1,0);
         entity.velocityDirty = true;
 
@@ -58,7 +55,6 @@ public class SandtrapEffect extends StatusEffect {
     }
 
     private void applySand(int heightOffset, float r, ServerWorld world, LivingEntity entity, int chance){
-
         int xOffset = getRandomOffset((int)(r + 0.5F));
         int zOffset = getRandomOffset((int)(r + 0.5F));
 
@@ -99,11 +95,9 @@ public class SandtrapEffect extends StatusEffect {
                         )
                 )
                 , world, entity);
-
     }
 
     private void tryPlaceSand(Vec3i offset, BlockPredicate additionalPredicate, ServerWorld world, LivingEntity entity){
-
         BlockPredicate blockPredicate = BlockPredicate.allOf(
                 additionalPredicate,
                 BlockPredicate.replaceable(),
@@ -127,7 +121,6 @@ public class SandtrapEffect extends StatusEffect {
                 Optional.of(GameEvent.BLOCK_PLACE)
         );
         enchantmentEffect.apply(world, 1, null, entity, entity.getEntityPos());
-
     }
 
     @Override

@@ -27,11 +27,11 @@ public class FirewalkEffect extends StatusEffect {
         if(amplifier >= 2){
             applyFire(new Vec3i(0, 1, 0), amplifier, world, entity);
         }
+
         return true;
     }
 
     private void applyFire(Vec3i offset, int amplifier, ServerWorld world, LivingEntity entity){
-
         EnchantmentEntityEffect enchantmentEffect = new ReplaceDiskEnchantmentEffect(
                 new EnchantmentLevelBasedValue.Clamped(EnchantmentLevelBasedValue.linear(1.0F, 1.0F), 0.0F, 16.0F),
                 EnchantmentLevelBasedValue.constant(1.0F),
@@ -48,7 +48,6 @@ public class FirewalkEffect extends StatusEffect {
         enchantmentEffect.apply(world, (amplifier) + 1, null, entity, entity.getEntityPos());
 
         if(amplifier >= 2){
-
             EnchantmentEntityEffect enchantmentEffect2 = new ReplaceDiskEnchantmentEffect(
                     EnchantmentLevelBasedValue.constant(2.0F),
                     EnchantmentLevelBasedValue.constant(1.0F),
@@ -62,7 +61,6 @@ public class FirewalkEffect extends StatusEffect {
                     Optional.of(GameEvent.BLOCK_PLACE)
             );
             enchantmentEffect2.apply(world, 1, null, entity, entity.getEntityPos());
-
         }
     }
 

@@ -15,14 +15,11 @@ public class PrecipitationEffect extends InstantStatusEffect {
 
     @Override
     public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-
         return true;
     }
 
     public void applyInstantEffect(ServerWorld world, @Nullable Entity effectEntity, @Nullable Entity attacker, LivingEntity target, int amplifier, double proximity) {
-
         world.setWeather(-1, -1, true, amplifier > 0);
-
     }
 
     @Override

@@ -16,6 +16,7 @@ public class ModGamerules {
             .range(1, 64)
             .buildAndRegister(Identifier.of(JuliansKitchen.MOD_ID,"potion_bundle_capacity"))
             ;
+
     public  static final GameRule<Integer> POTION_BUNDLE_VISIBLE_COUNT = GameRuleBuilder
             .forInteger(defaultPotionBundleVisibleCount)
             .category(GameRuleCategory.MISC)
@@ -31,6 +32,7 @@ public class ModGamerules {
         int gameRuleValue = serverWorld.getGameRules().getValue(POTION_BUNDLE_CAPACITY);
         return Math.min(Math.max(1, gameRuleValue), 64);
     }
+
     public static int getPotionBundleVisibleCount(){
         if(ModServerTickListener.currentServerWorld == null){
             return defaultPotionBundleVisibleCount;
