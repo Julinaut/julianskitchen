@@ -26,6 +26,10 @@
   "effect.julianskitchen.soft_landing": "Soft Landing",
   "effect.julianskitchen.saturation": "Saturation",
   "effect.julianskitchen.sandtrap": "Sandtrap",
+  "effect.julianskitchen.firewalk": "Firewalk",
+  "effect.julianskitchen.precipitation": "Precipitation",
+  "effect.julianskitchen.clear_sky": "Clear Sky",
+  "effect.julianskitchen.fertilize": "Fertilize",
 
   "item.minecraft.potion.effect.sandtrap_potion_a": "Potion of Sandslide",
   "item.minecraft.potion.effect.sandtrap_potion_b": "Potion of Sandtrap",
@@ -39,7 +43,6 @@
   "item.minecraft.tipped_arrow.effect.sandtrap_potion_a": "Arrow of Sandslide",
   "item.minecraft.tipped_arrow.effect.sandtrap_potion_b": "Arrow of Sandtrap",
   "item.minecraft.tipped_arrow.effect.sandtrap_potion_c": "Arrow of Suffocation",
-  "effect.julianskitchen.firewalk": "Firewalk",
 
   "item.minecraft.potion.effect.firewalk_potion_aa": "Potion of Kindling",
   "item.minecraft.potion.effect.firewalk_potion_ab": "Potion of Kindling II",
@@ -77,8 +80,6 @@
   "item.minecraft.tipped_arrow.effect.firewalk_potion_ca": "Arrow of Extended Kindling",
   "item.minecraft.tipped_arrow.effect.firewalk_potion_cb": "Arrow of Extended Kindling II",
   "item.minecraft.tipped_arrow.effect.firewalk_potion_cc": "Arrow of Extended Kindling III",
-  "effect.julianskitchen.precipitation": "Precipitation",
-  "effect.julianskitchen.clear_sky": "Clear Sky",
 
   "item.minecraft.potion.effect.clear_sky_potion": "Potion of Unclouding",
   "item.minecraft.splash_potion.effect.clear_sky_potion": "Splash Potion of Unclouding",
@@ -93,7 +94,6 @@
   "item.minecraft.lingering_potion.effect.monsoon_potion_b": "Lingering Potion of the unbridled Monsoon",
   "item.minecraft.tipped_arrow.effect.monsoon_potion_a": "Arrow of the Monsoon",
   "item.minecraft.tipped_arrow.effect.monsoon_potion_b": "Arrow of the unbridled Monsoon",
-  "effect.julianskitchen.fertilize": "Fertilize",
 
   "item.minecraft.potion.effect.fertilize_potion_a": "Potion of Growth",
   "item.minecraft.potion.effect.fertilize_potion_b": "Potion of Sustained Growth",
