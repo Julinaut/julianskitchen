@@ -49,17 +49,36 @@ Also: Potion Bundle!
     - Mending Touch
         - Awkward Potion + Resin Clump
         - Makes the affected repair any tool slowly over time by holding it in their main hand while the effect is active.
-        
+    - Firewalk
+      - Awkward Potion + Fire Charge
+      - Sets fire to the ground around the affected entity.
+      - Only stage three (after applying 2 glowstone dust) comes with fire resistance. This means ‘Firewalk’ and ‘Firewalk II’ are considered harmful effects. ‘Firewalk III’ is only harmful to others around you.
+      - Also: I might not have to tell you this but: **Be careful.** You’re playing with fire!
+    - Precipitation
+        - Awkward Potion + Heart of the Sea
+        - Instantly changes the weather
+            - ‘Precipitation’ changes the weather to rain.
+            - ‘Precipitation II’ changes the weather to thunderstorm.
+        - Adding a Fermented Spider Eye Item to any Precipitation Potion, turns it into a ‘Clear Sky’ Potion, which changes the weather to a clear sky.
+    - Sandtrap
+        - Awkward Potion + Short Dry Grass
+        - Makes the affected entity leak sand. Until suffocation, if the effect level is at least as high as the height of the target in blocks. (Sandtrap II, leaks sand up to two blocks high. Sandtrap III up to three blocks)
+    - Growth
+        - Awkward Potion + Fermented Spider Eye
+        - Applies a fertilizing effect similar to the Bone Meal Item, on the ground where the affected entity walks.
+
+
 - Adds Potion Bundle item
     - Works similar to the Bundle item but can only hold potions and bottles.
     - Holds up to 6 bottles. 
         - (Can be changed via `julianskitchen:potion_bundle_capacity` gamerule)
-        - One bottle can be a water bottle, a potion, an empty glass bottle or a honey bottle.
+        - One bottle can be a Water Bottle, a Potion, a Glass Bottle, a Honey Bottle, Dragon’s Breath, an Ominous Bottle or a Bottle o’ Enchanting
     - Only displays one topmost item in tooltip. 
         - (Can be changed via `julianskitchen:potion_bundle_visible_count` gamerule) 
     - Can be crafted using 3 rabbit hide, 5 leather and one wool block of any color.
         - ![recipe](media/potionBundleRecipe.png)
-        - Can be dyed any color by combining the Potion Bundle with a dye in crafting. **BE CAREFUL: Dying a Potion Bundle removes its content. This will get fixed in the future.**
+        - Can be dyed any color by combining the Potion Bundle with a dye in crafting. 
+      
 ---
 
 ## Installation & Requirements
@@ -93,4 +112,4 @@ Full size image: https://juhewe.de/jkrecipes.webp
 - Ability to combine certain ingredients into multi-effect potions.
 - Better balancing of effect times and amplifiers.
 - More enchantment effects as potion effects.
-- A potion that changes the weather
+- A potion that turns grown animals into babies.
