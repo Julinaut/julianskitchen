@@ -1,51 +1,45 @@
 package net.juhewe.julianskitchen.effect;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.effect.EnchantmentEntityEffect;
-import net.minecraft.enchantment.effect.entity.ReplaceBlockEnchantmentEffect;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.InstantStatusEffect;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.item.enchantment.effects.ReplaceBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 import java.util.Optional;
+import java.util.Random;
 
-public class SandtrapEffect extends StatusEffect {
+public class SandtrapEffect extends MobEffect {
 
-    private static final Random random = Random.create();
+    private static final Random random = new Random();
 
-    public SandtrapEffect(StatusEffectCategory category, int color) {
+    public SandtrapEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
     @Override
-    public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-        applySand(0, 1, world, entity, 100);
-        applySand(0, 2, world, entity, 50);
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
+        applySand(0, 1, level, entity, 100);
+        applySand(0, 2, level, entity, 50);
 
         if(amplifier >= 1) {
-            applySand(1, 1, world, entity, 100);
-            applySand(1, 1, world, entity,50 + amplifier * 20);
+            applySand(1, 1, level, entity, 100);
+            applySand(1, 1, level, entity,50 + amplifier * 20);
         }
         if(amplifier >= 2) {
-            applySand(2, 1, world, entity, 100);
-            applySand(1, 3, world, entity,50 + amplifier * 10);
+            applySand(2, 1, level, entity, 100);
+            applySand(1, 3, level, entity,50 + amplifier * 10);
         }
 
-        entity.setVelocity(0,-1,0);
-        entity.velocityDirty = true;
+        entity.setDeltaMovement(0,-1,0);
 
         return true;
     }
@@ -54,7 +48,7 @@ public class SandtrapEffect extends StatusEffect {
         return (random.nextInt(100) < 50 ? 1 : -1) * random.nextInt(range);
     }
 
-    private void applySand(int heightOffset, float r, ServerWorld world, LivingEntity entity, int chance){
+    private void applySand(int heightOffset, float r, ServerLevel level, LivingEntity entity, int chance){
         int xOffset = getRandomOffset((int)(r + 0.5F));
         int zOffset = getRandomOffset((int)(r + 0.5F));
 
@@ -73,13 +67,13 @@ public class SandtrapEffect extends StatusEffect {
         }
 
         if(xOffset == 0 && zOffset == 0){
-            tryPlaceSand(totalOffset, BlockPredicate.alwaysTrue(), world, entity);
+            tryPlaceSand(totalOffset, BlockPredicate.alwaysTrue(), level, entity);
         }
 
         tryPlaceSand(totalOffset,
                 BlockPredicate.anyOf(
                         BlockPredicate.allOf(
-                                BlockPredicate.matchingBlockTag(new Vec3i(0, -1, 0), BlockTags.SAND),
+                                BlockPredicate.matchesTag(new Vec3i(0, -1, 0), BlockTags.SAND),
                                 BlockPredicate.anyOf(
                                         BlockPredicate.replaceable(new Vec3i(1, -1, 0)),
                                         BlockPredicate.replaceable(new Vec3i(-1, -1, 0)),
@@ -88,43 +82,43 @@ public class SandtrapEffect extends StatusEffect {
                                 )
                         ),
                         BlockPredicate.anyOf(
-                                BlockPredicate.matchingBlockTag(new Vec3i(1, 1, 0), BlockTags.SAND),
-                                BlockPredicate.matchingBlockTag(new Vec3i(-1, 1, 0), BlockTags.SAND),
-                                BlockPredicate.matchingBlockTag(new Vec3i(0, 1, 1), BlockTags.SAND),
-                                BlockPredicate.matchingBlockTag(new Vec3i(0, 1, -1), BlockTags.SAND)
+                                BlockPredicate.matchesTag(new Vec3i(1, 1, 0), BlockTags.SAND),
+                                BlockPredicate.matchesTag(new Vec3i(-1, 1, 0), BlockTags.SAND),
+                                BlockPredicate.matchesTag(new Vec3i(0, 1, 1), BlockTags.SAND),
+                                BlockPredicate.matchesTag(new Vec3i(0, 1, -1), BlockTags.SAND)
                         )
                 )
-                , world, entity);
+                , level, entity);
     }
 
-    private void tryPlaceSand(Vec3i offset, BlockPredicate additionalPredicate, ServerWorld world, LivingEntity entity){
+    private void tryPlaceSand(Vec3i offset, BlockPredicate additionalPredicate, ServerLevel level, LivingEntity entity){
         BlockPredicate blockPredicate = BlockPredicate.allOf(
                 additionalPredicate,
                 BlockPredicate.replaceable(),
                 BlockPredicate.anyOf(
                         BlockPredicate.not(
-                                BlockPredicate.matchingBlockTag(new Vec3i(0, -1, 0), BlockTags.AIR)
+                                BlockPredicate.matchesTag(new Vec3i(0, -1, 0), BlockTags.AIR)
                         ),
                         BlockPredicate.not(
-                                BlockPredicate.matchingBlockTag(new Vec3i(0, -2, 0), BlockTags.AIR)
+                                BlockPredicate.matchesTag(new Vec3i(0, -2, 0), BlockTags.AIR)
                         ),
                         BlockPredicate.not(
-                                BlockPredicate.matchingBlockTag(new Vec3i(0, -3, 0), BlockTags.AIR)
+                                BlockPredicate.matchesTag(new Vec3i(0, -3, 0), BlockTags.AIR)
                         )
                 )
         );
 
-        EnchantmentEntityEffect enchantmentEffect = new ReplaceBlockEnchantmentEffect(
+        EnchantmentEntityEffect enchantmentEffect = new ReplaceBlock(
                 offset,
                 Optional.of(blockPredicate),
-                BlockStateProvider.of(Blocks.SAND),
+                BlockStateProvider.simple(Blocks.SAND),
                 Optional.of(GameEvent.BLOCK_PLACE)
         );
-        enchantmentEffect.apply(world, 1, null, entity, entity.getEntityPos());
+        enchantmentEffect.apply(level, 1, null, entity, entity.position());
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

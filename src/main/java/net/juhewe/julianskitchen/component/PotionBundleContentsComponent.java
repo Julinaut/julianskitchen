@@ -2,162 +2,191 @@ package net.juhewe.julianskitchen.component;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipData;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.screen.slot.Slot;
-import org.jspecify.annotations.Nullable;
 
-public final class PotionBundleContentsComponent implements TooltipData {
-    public static final PotionBundleContentsComponent DEFAULT = new PotionBundleContentsComponent(List.of());
+public final class PotionBundleContentsComponent implements TooltipComponent {
+
+    public static final PotionBundleContentsComponent DEFAULT =
+            new PotionBundleContentsComponent(List.of());
+
     public static final Codec<PotionBundleContentsComponent> CODEC;
-    public static final PacketCodec<RegistryByteBuf, PotionBundleContentsComponent> PACKET_CODEC;
-    final List<ItemStack> stacks;
+    public static final StreamCodec<RegistryFriendlyByteBuf, PotionBundleContentsComponent> STREAM_CODEC;
 
-    public ItemStack get(int index) { return (ItemStack)this.stacks.get(index); }
-    public Stream<ItemStack> stream() { return this.stacks.stream().map(ItemStack::copy); }
-    public Iterable<ItemStack> iterate() { return this.stacks; }
-    public Iterable<ItemStack> iterateCopy() { return Lists.transform(this.stacks, ItemStack::copy); }
-    public int size() { return this.stacks.size(); }
-    public boolean isEmpty() { return this.stacks.isEmpty(); }
+    final List<ItemStackTemplate> stacks;
 
-    PotionBundleContentsComponent(List<ItemStack> stacks) {
+    public PotionBundleContentsComponent(List<ItemStackTemplate> stacks) {
         this.stacks = stacks;
     }
 
-    public int getContentAmount(){
+    public ItemStack get(int index) {
+        return this.stacks.get(index).create();
+    }
+
+    public Stream<ItemStack> stream() {
+        return this.stacks.stream().map(ItemStackTemplate::create);
+    }
+
+    public Iterable<ItemStackTemplate> iterate() {
+        return this.stacks;
+    }
+
+    public Iterable<ItemStack> iterateCopy() {
+        return Lists.transform(this.stacks, itemStackTemplate -> itemStackTemplate != null ? itemStackTemplate.create() : null);
+    }
+
+    public Stream<ItemStack> itemCopyStream() {
+        return this.stacks.stream().map(ItemStackTemplate::create);
+    }
+
+    public int size() {
+        return this.stacks.size();
+    }
+
+    public boolean isEmpty() {
+        return this.stacks.isEmpty();
+    }
+
+    public int getContentAmount() {
         int acc = 0;
-        for(ItemStack stack : stacks){
-            acc += PotionBundleContentsComponent.Builder.getStackContentAmount(stack);
+        for (ItemStackTemplate template : stacks) {
+            acc += Builder.getStackContentAmount(template.create());
         }
         return acc;
     }
 
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (!(o instanceof PotionBundleContentsComponent)) {
-            return false;
-        } else {
-            PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)o;
-            return ItemStack.stacksEqual(this.stacks, bundleContentsComponent.stacks);
+        if (this == o) return true;
+        if (!(o instanceof PotionBundleContentsComponent other)) return false;
+
+        if (this.stacks.size() != other.stacks.size()) return false;
+
+        for (int i = 0; i < this.stacks.size(); i++) {
+            if (!ItemStack.isSameItemSameComponents(
+                    this.stacks.get(i).create(),
+                    other.stacks.get(i).create()
+            )) return false;
         }
+
+        return true;
     }
 
+    @Override
     public int hashCode() {
-        return ItemStack.listHashCode(this.stacks);
+        int hash = 1;
+        for (ItemStackTemplate t : stacks) {
+            hash = 31 * hash + ItemStack.hashItemAndComponents(t.create());
+        }
+        return hash;
     }
 
+    @Override
     public String toString() {
-        return "BundleContents" + String.valueOf(this.stacks);
+        return "PotionBundleContents" + stacks;
     }
 
     static {
-        CODEC = ItemStack.CODEC.listOf()
-                .flatXmap(
-                        list -> DataResult.success(new PotionBundleContentsComponent(list)),  // deserialize
-                        component -> DataResult.success(component.stacks)                      // serialize
-                );
-        PACKET_CODEC = ItemStack.PACKET_CODEC.collect(PacketCodecs.toList()).xmap(PotionBundleContentsComponent::new, (component) -> component.stacks);
+        CODEC = ItemStackTemplate.CODEC.listOf()
+                .xmap(PotionBundleContentsComponent::new, c -> c.stacks);
+
+        STREAM_CODEC = ItemStackTemplate.STREAM_CODEC
+                .apply(ByteBufCodecs.list())
+                .map(PotionBundleContentsComponent::new, c -> c.stacks);
     }
 
     public static class Builder {
         private final List<ItemStack> stacks;
 
         public Builder(PotionBundleContentsComponent base) {
-            this.stacks = new ArrayList(base.stacks);
+            this.stacks = new ArrayList<>();
+            for (ItemStackTemplate t : base.stacks) {
+                this.stacks.add(t.create());
+            }
         }
 
         public Builder clear() {
-            this.stacks.clear();
+            stacks.clear();
             return this;
         }
 
-        public int getContentAmount(){
+        public int getContentAmount() {
             int acc = 0;
-            for(ItemStack stack : stacks){
+            for (ItemStack stack : stacks) {
                 acc += getStackContentAmount(stack);
             }
             return acc;
         }
 
-        public static int getStackContentAmount(ItemStack stack){
-            if(
-                    stack.itemMatches(Items.POTION.getRegistryEntry())
-                            || stack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
-                            ||stack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
-            ){
+        public static int getStackContentAmount(ItemStack stack) {
+            if (
+                    stack.is(Items.POTION) ||
+                            stack.is(Items.SPLASH_POTION) ||
+                            stack.is(Items.LINGERING_POTION)
+            ) {
                 return 1;
             }
-            else{
-                return stack.getCount();
-            }
+            return stack.getCount();
         }
 
-        private boolean canBeBagged(ItemStack itemStack){
-            return (
-                    itemStack.itemMatches(Items.POTION.getRegistryEntry())
-                            || itemStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
-                            ||itemStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
-                            ||itemStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
-                            ||itemStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry())
-            );
+        public static boolean canBeBagged(ItemStack stack) {
+            return stack.is(Items.POTION)
+                    || stack.is(Items.SPLASH_POTION)
+                    || stack.is(Items.LINGERING_POTION)
+                    || stack.is(Items.GLASS_BOTTLE)
+                    || stack.is(Items.HONEY_BOTTLE);
         }
 
-        public int add(ItemStack itemStack, int bundleCapacity) {
+        public int add(ItemStack stack, int capacity) {
+            if (!canBeBagged(stack)) return 0;
 
-            if (!canBeBagged(itemStack)) {
-                return 0;
-            }
-            int itemsToInsert = Math.min(
-                    itemStack.getCount(),                        // items available in the stack
-                    Math.max(bundleCapacity - getContentAmount(), 0) // capacity left in bundle
+            int insert = Math.min(
+                    stack.getCount(),
+                    Math.max(capacity - getContentAmount(), 0)
             );
-            if (itemsToInsert == 0) {
-                return 0;
-            }
-            this.stacks.add(0, itemStack.split(itemsToInsert));
-            return itemsToInsert;
+
+            if (insert <= 0) return 0;
+
+            stacks.addFirst(stack.split(insert));
+            return insert;
         }
 
-        public int add(Slot slot, PlayerEntity player, int bundleCapacity) {
+        public int add(Slot slot, Player player, int capacity) {
+            ItemStack slotStack = slot.getItem();
 
-            ItemStack slotStack = slot.getStack();
+            if (!canBeBagged(slotStack)) return 0;
 
-            if (!canBeBagged(slotStack)) {
-                return 0;
-            }
-
-            int itemsToInsert = Math.min(
-                    slotStack.getCount(),                        // items available in the stack
-                    Math.max(bundleCapacity - getContentAmount(), 0) // capacity left in bundle
+            int insert = Math.min(
+                    slotStack.getCount(),
+                    Math.max(capacity - getContentAmount(), 0)
             );
 
-            return this.add(
-                    slot.takeStackRange(slotStack.getCount(), itemsToInsert, player),
-                    bundleCapacity
-            );
+            return add(slot.safeTake(slotStack.getCount(), insert, player), capacity);
         }
 
-        public @Nullable ItemStack removeFirst() {
-            if (this.stacks.isEmpty()) {
-                return null;
-            } else {
-                ItemStack itemStack = ((ItemStack)this.stacks.removeFirst()).copy();
-                return itemStack;
-            }
+        @Nullable
+        public ItemStack removeFirst() {
+            if (stacks.isEmpty()) return null;
+            return stacks.removeFirst().copy();
         }
 
         public PotionBundleContentsComponent build() {
-            return new PotionBundleContentsComponent(List.copyOf(this.stacks));
+            List<ItemStackTemplate> out = new ArrayList<>();
+            for (ItemStack stack : stacks) {
+                out.add(ItemStackTemplate.fromNonEmptyStack(stack));
+            }
+            return new PotionBundleContentsComponent(List.copyOf(out));
         }
     }
 }

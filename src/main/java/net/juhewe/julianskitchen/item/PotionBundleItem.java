@@ -4,86 +4,86 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import net.juhewe.julianskitchen.ModGamerules;
 import net.juhewe.julianskitchen.component.ModDataComponentTypes;
 import net.juhewe.julianskitchen.component.PotionBundleContentsComponent;
 import net.juhewe.julianskitchen.sound.ModSounds;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.MutableText;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.math.Fraction;
-import net.minecraft.text.Text;
+import org.jspecify.annotations.NonNull;
 
 public class PotionBundleItem extends Item {
 
-    private static final int FULL_ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 0.4F, 0.33F, 0.33F);
-    private static final int ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 0.9F, 0.9F, 1.0F);
+    private static final int FULL_ITEM_BAR_COLOR = ARGB.colorFromFloat(1.0F, 0.4F, 0.33F, 0.33F);
+    private static final int ITEM_BAR_COLOR = ARGB.colorFromFloat(1.0F, 0.9F, 0.9F, 1.0F);
 
-    public PotionBundleItem(Item.Settings settings) {
+    public PotionBundleItem(Item.Properties settings) {
         super(settings);
     }
 
-    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
-        if (bundleContentsComponent == null) {
+    public boolean overrideStackedOnOther(final ItemStack self, final Slot slot, final ClickAction clickAction, final Player player) {
+        PotionBundleContentsComponent initialContents = (PotionBundleContentsComponent)self.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
+        if (initialContents == null) {
             return false;
         } else {
-            ItemStack itemStack = slot.getStack();
-            PotionBundleContentsComponent.Builder builder = new PotionBundleContentsComponent.Builder(bundleContentsComponent);
-            if (clickType == ClickType.LEFT && !itemStack.isEmpty() &&
-                    (
-                            itemStack.itemMatches(Items.POTION.getRegistryEntry())
-                            || itemStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
-                            ||itemStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
-                                    ||itemStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
-                                    ||itemStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry())
-                            )
+            ItemStack other = slot.getItem();
+            //BundleContents.Mutable contents = new BundleContents.Mutable(initialContents);
+            PotionBundleContentsComponent.Builder contents = new PotionBundleContentsComponent.Builder(initialContents);
 
-            ) {
-                if (builder.add(slot, player, ModGamerules.getPotionBundleCapacity()) > 0) {
+            if (clickAction == ClickAction.PRIMARY && !other.isEmpty() &&
+                    (
+                            other.is(Items.POTION)
+                                    || other.is(Items.SPLASH_POTION)
+                                    ||other.is(Items.LINGERING_POTION)
+                                    ||other.is(Items.GLASS_BOTTLE)
+                                    ||other.is(Items.HONEY_BOTTLE)
+                    )) {
+                if (slot.allowModification(player) && contents.add(other, ModGamerules.getPotionBundleCapacity()) > 0) {
                     playInsertSound(player);
                 } else {
                     playInsertFailSound(player);
                 }
-
-                stack.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, builder.build());
+                self.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, contents.build());
                 this.onContentChanged(player);
                 return true;
-            } else if (clickType == ClickType.RIGHT && itemStack.isEmpty()) {
-                ItemStack itemStack2 = builder.removeFirst();
-                if (itemStack2 != null) {
-                    ItemStack itemStack3 = slot.insertStack(itemStack2);
-                    if (itemStack3.getCount() > 0) {
-                        builder.add(itemStack3, ModGamerules.getPotionBundleCapacity());
-                    } else {
+            } else if (clickAction == ClickAction.SECONDARY && other.isEmpty()) {
+                if (slot.allowModification(player)) {
+                    ItemStack itemStack = contents.removeFirst();
+                    if (itemStack != null) {
                         playRemoveOneSound(player);
+                        slot.set(itemStack);
                     }
                 }
 
-                stack.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, builder.build());
+                self.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, contents.build());
                 this.onContentChanged(player);
                 return true;
             } else {
@@ -92,44 +92,43 @@ public class PotionBundleItem extends Item {
         }
     }
 
-    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType == ClickType.LEFT && otherStack.isEmpty()) {
+    public boolean overrideOtherStackedOnMe(final ItemStack self, final ItemStack other, final Slot slot, final ClickAction clickAction, final Player player, final SlotAccess carriedItem) {
+        if (clickAction == ClickAction.PRIMARY && other.isEmpty()) {
             return false;
         } else {
-            PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
-            if (bundleContentsComponent == null) {
+            PotionBundleContentsComponent initialContents = (PotionBundleContentsComponent)self.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
+            if (initialContents == null) {
                 return false;
             } else {
-                PotionBundleContentsComponent.Builder builder = new PotionBundleContentsComponent.Builder(bundleContentsComponent);
-
-                if (clickType == ClickType.LEFT && !otherStack.isEmpty() &&
+                PotionBundleContentsComponent.Builder contents = new PotionBundleContentsComponent.Builder(initialContents);
+                if (clickAction == ClickAction.PRIMARY && !other.isEmpty() &&
                         (
-                                otherStack.itemMatches(Items.POTION.getRegistryEntry())
-                                        || otherStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())
-                                        ||otherStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())
-                                        ||otherStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry())
-                                        ||otherStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry())
-                        )
-                ) {
-                    if (slot.canTakePartial(player) && builder.add(otherStack, ModGamerules.getPotionBundleCapacity()) > 0) {
+                                other.is(Items.POTION)
+                                        || other.is(Items.SPLASH_POTION)
+                                        ||other.is(Items.LINGERING_POTION)
+                                        ||other.is(Items.GLASS_BOTTLE)
+                                        ||other.is(Items.HONEY_BOTTLE)
+                        )) {
+
+                    if (slot.allowModification(player) && contents.add(other, ModGamerules.getPotionBundleCapacity()) > 0) {
                         playInsertSound(player);
                     } else {
                         playInsertFailSound(player);
                     }
-
-                    stack.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, builder.build());
+                    self.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, contents.build());
                     this.onContentChanged(player);
                     return true;
-                } else if (clickType == ClickType.RIGHT && otherStack.isEmpty()) {
-                    if (slot.canTakePartial(player)) {
-                        ItemStack itemStack = builder.removeFirst();
+                } else if (clickAction == ClickAction.SECONDARY && other.isEmpty()) {
+
+                    if (slot.allowModification(player)) {
+                        ItemStack itemStack = contents.removeFirst();
                         if (itemStack != null) {
                             playRemoveOneSound(player);
-                            cursorStackReference.set(itemStack);
+                            carriedItem.set(itemStack);
                         }
                     }
 
-                    stack.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, builder.build());
+                    self.set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, contents.build());
                     this.onContentChanged(player);
                     return true;
                 } else {
@@ -139,49 +138,22 @@ public class PotionBundleItem extends Item {
         }
     }
 
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        user.setCurrentHand(hand);
-        return ActionResult.SUCCESS;
-    }
-
-    private void dropContentsOnUse(World world, PlayerEntity player, ItemStack stack) {
-        if (this.dropFirstBundledStack(stack, player)) {
-            playDropContentsSound(world, player);
-            player.incrementStat(Stats.USED.getOrCreateStat(this));
-        }
-    }
-
-    public boolean isItemBarVisible(ItemStack stack) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+    public boolean isBarVisible(final ItemStack stack) {
+        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, PotionBundleContentsComponent.DEFAULT);
         return Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()).compareTo(Fraction.ZERO) > 0;
     }
 
-    public int getItemBarStep(ItemStack stack) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-        return Math.max(Math.min(MathHelper.multiplyFraction(Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()), 13), 13), 0);
+    public int getBarWidth(final ItemStack stack) {
+        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, PotionBundleContentsComponent.DEFAULT);
+        return Math.max(Math.min(Mth.mulAndTruncate(Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()), 13), 13), 0);
     }
 
-    public int getItemBarColor(ItemStack stack) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+    public int getBarColor(final ItemStack stack) {
+        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.getOrDefault(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, PotionBundleContentsComponent.DEFAULT);
         return Fraction.getFraction(bundleContentsComponent.getContentAmount(), ModGamerules.getPotionBundleCapacity()).compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
     }
 
-    private boolean dropFirstBundledStack(ItemStack stack, PlayerEntity player) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
-        if (bundleContentsComponent != null && !bundleContentsComponent.isEmpty()) {
-            Optional<ItemStack> optional = popFirstBundledStack(stack, player, bundleContentsComponent);
-            if (optional.isPresent()) {
-                player.dropItem((ItemStack)optional.get(), true);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    private static Optional<ItemStack> popFirstBundledStack(ItemStack stack, PlayerEntity player, PotionBundleContentsComponent contents) {
+    private static Optional<ItemStack> popFirstBundledStack(ItemStack stack, Player player, PotionBundleContentsComponent contents) {
         PotionBundleContentsComponent.Builder builder = new PotionBundleContentsComponent.Builder(contents);
         ItemStack itemStack = builder.removeFirst();
         if (itemStack != null) {
@@ -193,24 +165,47 @@ public class PotionBundleItem extends Item {
         }
     }
 
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (user instanceof PlayerEntity playerEntity) {
-            int i = this.getMaxUseTime(stack, user);
+    public void onUseTick(final Level world, final LivingEntity user, final ItemStack stack, final int remainingUseTicks) {
+        if (user instanceof Player playerEntity) {
+            int i = this.getUseDuration(stack, user);
             boolean bl = remainingUseTicks == i;
             if (bl || remainingUseTicks < i - 10) {
                 this.dropContentsOnUse(world, playerEntity, stack);
             }
         }
-
     }
 
-    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
+    private void dropContentsOnUse(Level world, Player player, ItemStack stack) {
+        if (this.dropFirstBundledStack(stack, player)) {
+            playDropContentsSound(world, player);
+            player.awardStat(Stats.ITEM_USED.get(this));
+        }
+    }
+
+    private boolean dropFirstBundledStack(ItemStack stack, Player player) {
+        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
+        if (bundleContentsComponent != null && !bundleContentsComponent.isEmpty()) {
+            Optional<ItemStack> optional = popFirstBundledStack(stack, player, bundleContentsComponent);
+            if (optional.isPresent()) {
+                player.drop((ItemStack)optional.get(), true);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public int getUseDuration(final ItemStack itemStack, final LivingEntity entity) {
         return 200;
     }
 
-    @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+    public @NonNull ItemUseAnimation getUseAnimation(final @NonNull ItemStack itemStack) {
+        return ItemUseAnimation.BUNDLE;
+    }
 
+    public void appendHoverText(final ItemStack stack, final TooltipContext context, final TooltipDisplay displayComponent, final Consumer<Component> textConsumer, final TooltipFlag type) {
         int showItems = ModGamerules.getPotionBundleVisibleCount();
 
         PotionBundleContentsComponent content = (PotionBundleContentsComponent)stack.get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
@@ -218,7 +213,7 @@ public class PotionBundleItem extends Item {
         List<ItemStack> contentStacks = content.stream().toList();
 
         if(content.isEmpty()) {
-            textConsumer.accept(Text.translatable("julianskitchen.potion_bundle_tooltip_empty").formatted(Formatting.GRAY));
+            textConsumer.accept(Component.translatable("julianskitchen.potion_bundle_tooltip_empty").withStyle(ChatFormatting.GRAY));
         }
         else {
             int itemIndex = 0;
@@ -227,95 +222,97 @@ public class PotionBundleItem extends Item {
                 if(itemIndex < showItems){
 
                     if (itemIndex > 0) {
-                        textConsumer.accept(Text.translatable("julianskitchen.potion_bundle_tooltip_separator").formatted(Formatting.DARK_GRAY));
+                        textConsumer.accept(Component.translatable("julianskitchen.potion_bundle_tooltip_separator").withStyle(ChatFormatting.DARK_GRAY));
                     }
 
 
-                    PotionContentsComponent potionContent = (PotionContentsComponent)contentStack.get(DataComponentTypes.POTION_CONTENTS);
-                    boolean isGlassBottle = contentStack.itemMatches(Items.GLASS_BOTTLE.getRegistryEntry());
-                    boolean isHoneyBottle = contentStack.itemMatches(Items.HONEY_BOTTLE.getRegistryEntry());
+                    PotionContents potionContent = (PotionContents)contentStack.get(DataComponents.POTION_CONTENTS);
+                    boolean isGlassBottle = contentStack.is(Items.GLASS_BOTTLE);
+                    boolean isHoneyBottle = contentStack.is(Items.HONEY_BOTTLE);
                     if(potionContent != null || isGlassBottle || isHoneyBottle){
 
-                        if(contentStack.itemMatches(Items.POTION.getRegistryEntry())){
-                            textConsumer.accept(Text.translatable("item.minecraft.potion").formatted(Formatting.GRAY));
-                            buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
+                        if(contentStack.is(Items.POTION)){
+                            textConsumer.accept(Component.translatable("item.minecraft.potion").withStyle(ChatFormatting.GRAY));
+                            buildPotionEffectTooltip(potionContent.getAllEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F), context.tickRate());
                         }
-                        else if(contentStack.itemMatches(Items.SPLASH_POTION.getRegistryEntry())){
-                            textConsumer.accept(Text.translatable("item.minecraft.splash_potion").formatted(Formatting.GRAY));
-                            buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
+                        else if(contentStack.is(Items.SPLASH_POTION)){
+                            textConsumer.accept(Component.translatable("item.minecraft.splash_potion").withStyle(ChatFormatting.GRAY));
+                            buildPotionEffectTooltip(potionContent.getAllEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F), context.tickRate());
                         }
-                        else if(contentStack.itemMatches(Items.LINGERING_POTION.getRegistryEntry())){
-                            textConsumer.accept(Text.translatable("item.minecraft.lingering_potion").formatted(Formatting.GRAY));
-                            buildPotionEffectTooltip(potionContent.getEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponentTypes.POTION_DURATION_SCALE, 1.0F), context.getUpdateTickRate());
+                        else if(contentStack.is(Items.LINGERING_POTION)){
+                            textConsumer.accept(Component.translatable("item.minecraft.lingering_potion").withStyle(ChatFormatting.GRAY));
+                            buildPotionEffectTooltip(potionContent.getAllEffects(), textConsumer, (Float)contentStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F), context.tickRate());
                         }
                         else if(isGlassBottle){
-                            textConsumer.accept(Text.translatable("item.minecraft.glass_bottle").append(Text.of(" x" + contentStack.getCount())).formatted(Formatting.GRAY));
+                            textConsumer.accept(Component.translatable("item.minecraft.glass_bottle").append(Component.literal(" x" + contentStack.getCount())).withStyle(ChatFormatting.GRAY));
                         }
                         else if(isHoneyBottle){
-                            textConsumer.accept(Text.translatable("item.minecraft.honey_bottle").append(Text.of(" x" + contentStack.getCount())).formatted(Formatting.GRAY));
+                            textConsumer.accept(Component.translatable("item.minecraft.honey_bottle").append(Component.literal(" x" + contentStack.getCount())).withStyle(ChatFormatting.GRAY));
                         }
                     }
                 }
                 else if(itemIndex == showItems)
                 {
-                    textConsumer.accept(Text.of("... +" + (contentStacks.size() - showItems)));
+                    textConsumer.accept(Component.literal("... +" + (contentStacks.size() - showItems)));
                 }
                 itemIndex++;
             }
         }
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
     }
 
-    public static void buildPotionEffectTooltip(Iterable<StatusEffectInstance> effects, Consumer<Text> textConsumer, float durationMultiplier, float tickRate) {
-        List<com.mojang.datafixers.util.Pair<RegistryEntry<EntityAttribute>, EntityAttributeModifier>> list = Lists.newArrayList();
+    public static void buildPotionEffectTooltip(Iterable<MobEffectInstance> effects, Consumer<Component> textConsumer, float durationMultiplier, float tickRate) {
+        List<Pair<Holder<Attribute>, AttributeModifier>> list = Lists.newArrayList();
         boolean noEffects = true;
 
-        for(StatusEffectInstance statusEffectInstance : effects) {
+        for(MobEffectInstance MobEffectInstance : effects) {
             noEffects = false;
-            RegistryEntry<StatusEffect> registryEntry = statusEffectInstance.getEffectType();
-            int i = statusEffectInstance.getAmplifier();
-            ((StatusEffect)registryEntry.value()).forEachAttributeModifier(i, (attribute, modifier) -> list.add(new com.mojang.datafixers.util.Pair(attribute, modifier)));
-            MutableText mutableText = PotionContentsComponent.getEffectText(registryEntry, i);
-            if (!statusEffectInstance.isDurationBelow(20)) {
-                mutableText = Text.translatable("potion.withDuration", new Object[]{mutableText, StatusEffectUtil.getDurationText(statusEffectInstance, durationMultiplier, tickRate)});
+            Holder<MobEffect> registryEntry = MobEffectInstance.getEffect();
+            int i = MobEffectInstance.getAmplifier();
+            ((MobEffect)registryEntry.value()).createModifiers(i, (attribute, modifier) -> list.add(new Pair(attribute, modifier)));
+            MutableComponent mutableText = PotionContents.getPotionDescription(registryEntry, i);
+            if (!MobEffectInstance.endsWithin(20)) {
+                mutableText = Component.translatable("potion.withDuration", new Object[]{mutableText, MobEffectUtil.formatDuration(MobEffectInstance, durationMultiplier, tickRate)});
             }
 
-            textConsumer.accept(mutableText.formatted(((StatusEffect)registryEntry.value()).getCategory().getFormatting()));
+            textConsumer.accept(mutableText.withStyle(((MobEffect)registryEntry.value()).getCategory().getTooltipFormatting()));
         }
 
         if (noEffects) {
-            textConsumer.accept(Text.translatable("effect.none").formatted(Formatting.GRAY));
+            textConsumer.accept(Component.translatable("effect.none").withStyle(ChatFormatting.GRAY));
         }
     }
 
-    public void onItemEntityDestroyed(ItemEntity entity) {
-        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)entity.getStack().get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
+
+    public void onDestroyed(final ItemEntity entity) {
+        PotionBundleContentsComponent bundleContentsComponent = (PotionBundleContentsComponent)entity.getItem().get(ModDataComponentTypes.POTION_BUNDLE_CONTENTS);
         if (bundleContentsComponent != null) {
-            entity.getStack().set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, PotionBundleContentsComponent.DEFAULT);
-            ItemUsage.spawnItemContents(entity, bundleContentsComponent.iterateCopy());
+            entity.getItem().set(ModDataComponentTypes.POTION_BUNDLE_CONTENTS, PotionBundleContentsComponent.DEFAULT);
+            ItemUtils.onContainerDestroyed(entity, bundleContentsComponent.itemCopyStream());
         }
     }
 
     private static void playRemoveOneSound(Entity entity) {
-        entity.playSound(ModSounds.POTION_BUNDLE_REMOVE, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+        entity.playSound(ModSounds.POTION_BUNDLE_REMOVE, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F);
     }
 
     private static void playInsertSound(Entity entity) {
-        entity.playSound(ModSounds.POTION_BUNDLE_INSERT, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+        entity.playSound(ModSounds.POTION_BUNDLE_INSERT, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F);
     }
 
     private static void playInsertFailSound(Entity entity) {
-        entity.playSound(ModSounds.POTION_BUNDLE_INSERT_FAIL, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+        entity.playSound(ModSounds.POTION_BUNDLE_INSERT_FAIL, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F);
     }
 
-    private static void playDropContentsSound(World world, Entity entity) {
-        world.playSound((Entity)null, entity.getBlockPos(), ModSounds.POTION_BUNDLE_DROP_CONTENTS, SoundCategory.PLAYERS, 0.8F, 0.8F + entity.getEntityWorld().getRandom().nextFloat() * 0.4F);
+    private static void playDropContentsSound(Level world, Entity entity) {
+        world.playSound((Entity)null, entity.blockPosition(), ModSounds.POTION_BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F);
     }
 
-    private void onContentChanged(PlayerEntity user) {
-        ScreenHandler screenHandler = user.currentScreenHandler;
-        if (screenHandler != null) {
-            screenHandler.onContentChanged(user.getInventory());
+    private void onContentChanged(Player player) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu != null) {
+            containerMenu.slotsChanged(player.getInventory());
         }
+
     }
+
 }

@@ -1,10 +1,10 @@
 package net.juhewe.julianskitchen.sound;
 
 import net.juhewe.julianskitchen.JuliansKitchen;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 
 public class ModSounds {
 
@@ -14,8 +14,8 @@ public class ModSounds {
     public static final SoundEvent POTION_BUNDLE_REMOVE = registerSoundEvent("potion_bundle_remove");
 
     private static SoundEvent registerSoundEvent(String name){
-        Identifier id = Identifier.of(JuliansKitchen.MOD_ID, name);
-        return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+        Identifier id = Identifier.fromNamespaceAndPath(JuliansKitchen.MOD_ID, name);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createFixedRangeEvent(id, 1.0f));
     }
 
     public static void registerSounds(){

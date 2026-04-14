@@ -1,27 +1,28 @@
 package net.juhewe.julianskitchen.effect;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.server.world.ServerWorld;
 
-public class SoftLandingEffect extends StatusEffect {
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 
-    public SoftLandingEffect(StatusEffectCategory category, int color) {
+public class SoftLandingEffect extends MobEffect {
+
+    public SoftLandingEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
     @Override
-    public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
 
-        if(!entity.isOnGround()){
+        if(!entity.onGround()){
             entity.fallDistance = 0D;
         }
         return true;
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

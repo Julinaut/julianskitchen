@@ -1,32 +1,25 @@
 package net.juhewe.julianskitchen.effect;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.InstantStatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.server.world.ServerWorld;
-import org.jspecify.annotations.Nullable;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.InstantenousMobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 
-public class ClearSkyEffect extends InstantStatusEffect {
+public class ClearSkyEffect extends InstantenousMobEffect {
 
-    public ClearSkyEffect(StatusEffectCategory category, int color) {
+    public ClearSkyEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
     @Override
-    public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
+        level.getServer().setWeatherParameters(-1, -1, false, false);
         return true;
     }
 
-    public void applyInstantEffect(ServerWorld world, @Nullable Entity effectEntity, @Nullable Entity attacker, LivingEntity target, int amplifier, double proximity) {
-
-        world.setWeather(-1, -1, false, false);
-
-    }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

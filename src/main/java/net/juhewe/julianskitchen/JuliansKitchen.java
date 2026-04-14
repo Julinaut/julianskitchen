@@ -2,19 +2,20 @@ package net.juhewe.julianskitchen;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
+import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
 import net.juhewe.julianskitchen.component.ModDataComponentTypes;
 import net.juhewe.julianskitchen.effect.ModEffects;
 import net.juhewe.julianskitchen.item.ModItems;
 import net.juhewe.julianskitchen.potion.ModPotions;
 import net.juhewe.julianskitchen.sound.ModSounds;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder.Reference;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.Potion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 public class JuliansKitchen implements ModInitializer {
@@ -88,7 +89,7 @@ public class JuliansKitchen implements ModInitializer {
 	}
 
 	private static void registerSandtrapPotionRecipes(){
-		registerPotionRecipe(Potions.AWKWARD, Items.SHORT_DRY_GRASS, ModPotions.SANDTRAP_POTION_A);
+		registerPotionRecipe(Potions.AWKWARD, Items.DRY_SHORT_GRASS, ModPotions.SANDTRAP_POTION_A);
 		registerPotionRecipe(ModPotions.SANDTRAP_POTION_A, Items.GLOWSTONE_DUST, ModPotions.SANDTRAP_POTION_B);
 		registerPotionRecipe(ModPotions.SANDTRAP_POTION_B, Items.GLOWSTONE_DUST, ModPotions.SANDTRAP_POTION_C);
 	}
@@ -375,7 +376,7 @@ public class JuliansKitchen implements ModInitializer {
 		registerPotionRecipe(Potions.LONG_SLOW_FALLING, Items.REDSTONE, ModPotions.SLOW_FALLING_POTION_C);
 	}
 
-	private static void registerPotionRecipe(RegistryEntry<Potion> input, Item ingredient, RegistryEntry<Potion> output){
-		FabricBrewingRecipeRegistryBuilder.BUILD.register(builder ->  builder.registerPotionRecipe(input, ingredient, output));
+	private static void registerPotionRecipe(Reference<Potion> input, Item ingredient, Reference<Potion> output){
+		FabricPotionBrewingBuilder.BUILD.register(builder ->  builder.addMix(input, ingredient, output));
 	}
 }
