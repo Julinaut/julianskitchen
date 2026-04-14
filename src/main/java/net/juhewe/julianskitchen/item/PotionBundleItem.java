@@ -65,6 +65,9 @@ public class PotionBundleItem extends Item {
                                     ||other.is(Items.LINGERING_POTION)
                                     ||other.is(Items.GLASS_BOTTLE)
                                     ||other.is(Items.HONEY_BOTTLE)
+                                    || other.is(Items.DRAGON_BREATH)
+                                    || other.is(Items.OMINOUS_BOTTLE)
+                                    || other.is(Items.EXPERIENCE_BOTTLE)
                     )) {
                 if (slot.allowModification(player) && contents.add(other, ModGamerules.getPotionBundleCapacity()) > 0) {
                     playInsertSound(player);
@@ -108,6 +111,9 @@ public class PotionBundleItem extends Item {
                                         ||other.is(Items.LINGERING_POTION)
                                         ||other.is(Items.GLASS_BOTTLE)
                                         ||other.is(Items.HONEY_BOTTLE)
+                                        || other.is(Items.DRAGON_BREATH)
+                                        || other.is(Items.OMINOUS_BOTTLE)
+                                        || other.is(Items.EXPERIENCE_BOTTLE)
                         )) {
 
                     if (slot.allowModification(player) && contents.add(other, ModGamerules.getPotionBundleCapacity()) > 0) {
@@ -229,7 +235,10 @@ public class PotionBundleItem extends Item {
                     PotionContents potionContent = (PotionContents)contentStack.get(DataComponents.POTION_CONTENTS);
                     boolean isGlassBottle = contentStack.is(Items.GLASS_BOTTLE);
                     boolean isHoneyBottle = contentStack.is(Items.HONEY_BOTTLE);
-                    if(potionContent != null || isGlassBottle || isHoneyBottle){
+                    boolean isDragonsBreath = contentStack.is(Items.DRAGON_BREATH);
+                    boolean isOminousBottle = contentStack.is(Items.OMINOUS_BOTTLE);
+                    boolean isExperienceBottle = contentStack.is(Items.EXPERIENCE_BOTTLE);
+                    if(potionContent != null || PotionBundleContentsComponent.canBeBagged(contentStack)){
 
                         if(contentStack.is(Items.POTION)){
                             textConsumer.accept(Component.translatable("item.minecraft.potion").withStyle(ChatFormatting.GRAY));
@@ -248,6 +257,15 @@ public class PotionBundleItem extends Item {
                         }
                         else if(isHoneyBottle){
                             textConsumer.accept(Component.translatable("item.minecraft.honey_bottle").append(Component.literal(" x" + contentStack.getCount())).withStyle(ChatFormatting.GRAY));
+                        }
+                        else if(isDragonsBreath){
+                            textConsumer.accept(Component.translatable("item.minecraft.dragon_breath").append(Component.literal(" x" + contentStack.getCount())).withStyle(ChatFormatting.GRAY));
+                        }
+                        else if(isOminousBottle){
+                            textConsumer.accept(Component.translatable("item.minecraft.ominous_bottle").append(Component.literal(" x" + contentStack.getCount())).withStyle(ChatFormatting.GRAY));
+                        }
+                        else if(isExperienceBottle){
+                            textConsumer.accept(Component.translatable("item.minecraft.experience_bottle").append(Component.literal(" x" + contentStack.getCount())).withStyle(ChatFormatting.GRAY));
                         }
                     }
                 }

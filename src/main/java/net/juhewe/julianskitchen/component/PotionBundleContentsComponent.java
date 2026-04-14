@@ -106,6 +106,17 @@ public final class PotionBundleContentsComponent implements TooltipComponent {
                 .map(PotionBundleContentsComponent::new, c -> c.stacks);
     }
 
+    public static boolean canBeBagged(ItemStack stack) {
+        return stack.is(Items.POTION)
+                || stack.is(Items.SPLASH_POTION)
+                || stack.is(Items.LINGERING_POTION)
+                || stack.is(Items.GLASS_BOTTLE)
+                || stack.is(Items.HONEY_BOTTLE)
+                || stack.is(Items.DRAGON_BREATH)
+                || stack.is(Items.OMINOUS_BOTTLE)
+                || stack.is(Items.EXPERIENCE_BOTTLE);
+    }
+
     public static class Builder {
         private final List<ItemStack> stacks;
 
@@ -140,13 +151,6 @@ public final class PotionBundleContentsComponent implements TooltipComponent {
             return stack.getCount();
         }
 
-        public static boolean canBeBagged(ItemStack stack) {
-            return stack.is(Items.POTION)
-                    || stack.is(Items.SPLASH_POTION)
-                    || stack.is(Items.LINGERING_POTION)
-                    || stack.is(Items.GLASS_BOTTLE)
-                    || stack.is(Items.HONEY_BOTTLE);
-        }
 
         public int add(ItemStack stack, int capacity) {
             if (!canBeBagged(stack)) return 0;
