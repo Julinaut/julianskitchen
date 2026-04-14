@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "julianskitchen:potion_bundle",
-    "minecraft:magenta_dye"
-  ],
+  "type": "minecraft:crafting_transmute",
+  "category": "equipment",
+  "group": "potion_bundle_dye",
+  "input": "julianskitchen:potion_bundle",
+  "material": "minecraft:magenta_dye",
   "result": {
-    "count": 1,
     "id": "julianskitchen:magenta_potion_bundle"
   }
 }
